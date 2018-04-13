@@ -3,7 +3,7 @@ SECRET_KEY = 'VERY_HARD_KEY'
 # SQLite
 
 #SQLALCHEMY_DATABASE_URI = 'sqlite:///foo.db'  # Relative path 4 * / for abs.
-#SQLALCHEMY_DATABASE_URI = 'sqlite://'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///storage.db'
 
 
 # PostgreSQL

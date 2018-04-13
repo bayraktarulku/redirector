@@ -1,14 +1,15 @@
-from app.models import User, DBSession, IntegrityError
+from app.models import User, DBSession
 
 
-def create_user(name, password):
-    s = DBSession()
-    u = User(name=name, password=password)
-    s.add(u)
+def create_user(data):
     try:
+        s = DBSession()
+        u = User(name=data['name'], password=data['password'])
+
+        s.add(u)
         s.commit()
         result = True
-    except IntegrityError:
+    except:
         s.rollback()
         result = False
 
@@ -16,10 +17,12 @@ def create_user(name, password):
     return result
 
 
-def del_user(name, password):
+def del_user(data):
     s = DBSession()
-    u = s.query(User).filter(User.name == name,
-                             User.password == password).first()
+    u = s.query(User).filter(User.name == data['name'],
+                             User.password == data['password']).first()
+    print(u)
+
     if not u:
         result = False
     else:
@@ -30,15 +33,18 @@ def del_user(name, password):
     return result
 
 
-def change_password(name, password, new_password):
+def change_password(data):
+    data = {k: data[k] for k in data if k in ['name', 'password',
+                                              'new_password']}
+
     s = DBSession()
-    u = s.query(User).filter(User.name == name,
-                             User.password == password).first()
+    u = s.query(User).filter(User.name == data['name'],
+                             User.password == data['password']).first()
 
     if not u:
         result = False
     else:
-        u.password = new_password
+        u.password = data['new_password']
         result = True
         s.commit()
     s.close()
@@ -48,6 +54,7 @@ def change_password(name, password, new_password):
 def get_redirections(user_id):
     s = DBSession()
     u = s.query(User).get(user_id)
+    print(u)
     if not u:
         result = None
     else:

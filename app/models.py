@@ -19,6 +19,9 @@ class User(Base):
     def __repr__(self):
         return '<User:"{}">'.format(self.name)
 
+    def to_dict(self):
+        return {'id': self.id,
+                'name': self.name}
 
 class Redirection(Base):
     __tablename__ = 'redirections'
@@ -32,6 +35,9 @@ class Redirection(Base):
     def __repr__(self):
         return '<Redirection: "{}">'.format(self.redirect_value)
 
+    def to_dict(self):
+        return {'id': self.id,
+                'active': self.active}
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI, encoding='utf8', echo=False)
 DBSession = scoped_session(sessionmaker(bind=engine))
