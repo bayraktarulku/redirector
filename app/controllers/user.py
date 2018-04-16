@@ -1,10 +1,10 @@
 from app.models import User, DBSession
 
 
-def create_user(data):
+def create_user(name, password):
     try:
         s = DBSession()
-        u = User(name=data['name'], password=data['password'])
+        u = User(name=name, password=password)
 
         s.add(u)
         s.commit()
@@ -17,10 +17,10 @@ def create_user(data):
     return result
 
 
-def del_user(data):
+def del_user(name, password):
     s = DBSession()
-    u = s.query(User).filter(User.name == data['name'],
-                             User.password == data['password']).first()
+    u = s.query(User).filter(User.name == name,
+                             User.password == password).first()
     print(u)
 
     if not u:
@@ -33,18 +33,15 @@ def del_user(data):
     return result
 
 
-def change_password(data):
-    data = {k: data[k] for k in data if k in ['name', 'password',
-                                              'new_password']}
-
+def change_password(name, password, new_password):
     s = DBSession()
-    u = s.query(User).filter(User.name == data['name'],
-                             User.password == data['password']).first()
+    u = s.query(User).filter(User.name == name,
+                             User.password == password).first()
 
     if not u:
         result = False
     else:
-        u.password = data['new_password']
+        u.password = new_password
         result = True
         s.commit()
     s.close()

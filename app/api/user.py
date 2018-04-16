@@ -21,15 +21,14 @@ class User(Resource):
                 'redirections': redirections}
 
     def post(self):
-        try:
-            data = USER_SCHEMA.validate(request.json)
-        except SchemaError as e:
-            return {'status': 'error',
-                    'message': 'Missing or incorrect parameters'}
+            try:
+                data = USER_SCHEMA.validate(request.json)
+            except SchemaError as e:
+                return {'status': 'error'}
+            user = create_user(**data)
 
-        user = create_user(data)
+            return {'status': 'OK'}
 
-        return {'status': 'OK'}
 
     def put(self):
         try:
@@ -44,7 +43,7 @@ class User(Resource):
         data['new_password'] = data[
             'new_password'] if 'new_password' in data else ''
 
-        user = change_password(data)
+        user = change_password(**data)
 
         return {'status': 'OK',
                 'user': user}
@@ -56,7 +55,7 @@ class User(Resource):
             return {'status': 'error',
                     'message': 'Missing or incorrect parameters'}
 
-        user = del_user(data)
+        user = del_user(**data)
         return {'status': 'OK'}
 
 api.add_resource(User, '/api/user')
